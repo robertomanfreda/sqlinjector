@@ -1,60 +1,71 @@
 //alert("ADDON is executing");
 document.body.style.border = "5px solid blue";
 
-//Create array of options to be added
-var array = ["", "1","2","3","4", "5", "6", "7", "8", "9", "10"];
+//Create array of options to be added, these should be SQL payloads
+const array = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
-function createAndAppendSelectList(element) {
-    var span = document.getElementById("payloads_span");
-    if (null != span) {
-        span.remove();
+function main() {
+    const inputs = document.getElementsByTagName("INPUT");
+    for (let input of inputs) {
+        if (input.tagName === "INPUT") {
+            input.onclick = function () {
+                createAndAppendPayoladsBox(this);
+            }
+        }
     }
+}
+
+/**
+ *
+ * @param element the element where inject the SQL payload
+ */
+function createAndAppendPayoladsBox(element) {
+    let payloads_span = document.getElementById("payloads_span");
+    if (null != payloads_span) payloads_span.remove();
 
     // Create select list
-    var selectList = document.createElement("select");
-    selectList.id = "payloads_select";
+    let payloadsList = document.createElement("select");
+    payloadsList.id = "payloads_select";
 
     // Create and append options
-    for (var i = 0; i < array.length; i++) {
-        var option = document.createElement("option");
-        option.value = array[i];
-        option.text = array[i];
-        option.id = "opt_" + i;
-        option.onclick = function() {
+    for (let i = 0; i < array.length; i++) {
+        let payload = document.createElement("option");
+        payload.value = array[i];
+        payload.text = array[i];
+        payload.id = "opt_" + i;
+        payload.onclick = function () {
             element.value = this.text;
-        }
+        };
 
         // Append options
-        selectList.appendChild(option);
-    }    
+        payloadsList.appendChild(payload);
+    }
 
 
     // Append select list
-    span = document.createElement("span");
-    span.id = "payloads_span";
-    span.innerHTML = "Inject payload";
+    payloads_span = document.createElement("span");
+    payloads_span.id = "payloads_span";
+    payloads_span.innerHTML = "Inject payload";
 
-    document.body.appendChild(span);
+    document.body.appendChild(payloads_span);
 
-    span.style = "position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);";
+    payloads_span.style = getStyle();
 
-    span.appendChild(selectList);
+    payloads_span.appendChild(payloadsList);
 
-    var span_close = document.createElement("button");
-    span_close.innerHTML = "X";
-    span_close.style = "color: red";
-    span_close.onclick = function() {
-        span.remove(); 
-    }
-    
-    span.appendChild(span_close);
+    let spanClose = document.createElement("button");
+    spanClose.innerHTML = "X";
+    spanClose.style = "color: red";
+    spanClose.onclick = function () {
+        payloads_span.remove();
+    };
+
+    payloads_span.appendChild(spanClose);
 }
 
-var elements = document.getElementsByTagName("INPUT");
-for(var el of elements) {
-	if (el.tagName == "INPUT") {
-		el.onclick = function() {
-			createAndAppendSelectList(this);
-        }
-    }
+function getStyle() {
+    return "position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);";
 }
+
+//__________
+main();
