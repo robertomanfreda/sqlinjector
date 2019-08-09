@@ -1,7 +1,7 @@
 //alert("ADDON is executing");
 document.body.style.border = "5px solid blue";
 
-//Create array of options to be added, these should be SQL payloads
+//Create array of payloads to be added, these should be SQL payloads
 const array = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
 function main() {
@@ -46,7 +46,6 @@ function createAndAppendPayoladsBox(element) {
     payloads_span = document.createElement("span");
     payloads_span.id = "payloads_span";
     payloads_span.innerHTML = "Inject payload";
-
     document.body.appendChild(payloads_span);
 
     payloads_span.style = getStyle();
