@@ -45,8 +45,22 @@ const Ui = {
 
         if (Utils.isNotNull(menu) && !Utils.isVisible(menu)) Utils.show(menu);
 
-        Ui.getButtonClose().onclick = function () {
-            Utils.hide(menu);
+        menu.onload = function() {
+            Ui.getButtonClose().onclick = function () {
+                Utils.hide(Ui.getMenu());
+            };
+
+
+            let listReference = Ui.getPayloadTypesList();
+            for (let payloadType of Object.values(PAYLOAD_TYPES)) {
+                let listElement = document.createElement("li");
+                listReference.appendChild(listElement);
+
+                let button = document.createElement("button");
+                listElement.appendChild(button);
+                button.innerHTML = payloadType;
+                // TODO insert typed payloads function
+            }
         };
 
         return menu;
@@ -101,16 +115,7 @@ function main() {
                 menu = Ui.createMenu();
 
                 // TODO Select function
-                /*let listReference = Ui.getPayloadTypesList();
-                for (let payloadType of Object.keys(PAYLOAD_TYPES)) {
-                    let listElement = document.createElement("li");
-                    listReference.appendChild(listElement);
-
-                    let button = document.createElement("button");
-                    listElement.appendChild(button);
-                    button.innerHTML = payloadType;
-                    //button.onclick = openTypedPayloads(payloadType);
-                }*/
+                /**/
 
                 // show menu
                 if (Utils.isNotNull(menu) && !Utils.isVisible(menu)) Utils.show(menu);
