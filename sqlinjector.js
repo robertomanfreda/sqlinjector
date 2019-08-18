@@ -12,8 +12,8 @@ const PAYLOAD_TYPES = {
 };
 
 const TYPED_PAYLOADS = {
-    "RAW_PAYOLADS": ["", "1 OR 1=1", "1\\' OR \\'1\\'=\\'1", "1\\'1", "1 EXEC XP_", "1 AND 1=1", "1\\' AND 1=(SELECT COUNT(*) FROM tablenames); --", "1 AND USER_NAME() = \\'dbo\\'", "\\\\\\'; DESC users; --"],
-    "ENCODED_PAYLOADS": 2,
+    "RAW": ["1 OR 1=1", "1\\' OR \\'1\\'=\\'1", "1\\'1", "1 EXEC XP_", "1 AND 1=1", "1\\' AND 1=(SELECT COUNT(*) FROM tablenames); --", "1 AND USER_NAME() = \\'dbo\\'", "\\\\\\'; DESC users; --"],
+    "ENCODED": ["sdsddsd", "vgvhvhj", "vvjhwdbjhd"],
 };
 
 // TODO Understand how to use modules and import these vars in it
@@ -38,14 +38,14 @@ const Ui = {
         let menu = document.createElement("iframe");
         menu.id = IDS.ID_MENU;
         menu.src = browser.extension.getURL("menu/menu.html");
-        menu.style = "display: block; position:absolute; top: 50%; left: 25%; width:50%;";
+        menu.style = "display: block; position:absolute; top: 25%; left: 25%; width:50%; height:50%;";
         Utils.hide(menu);
 
         document.body.appendChild(menu);
 
         if (Utils.isNotNull(menu) && !Utils.isVisible(menu)) Utils.show(menu);
 
-        menu.onload = function() {
+        menu.onload = function () {
             Ui.getButtonClose().onclick = function () {
                 Utils.hide(Ui.getMenu());
             };
@@ -53,13 +53,29 @@ const Ui = {
 
             let listReference = Ui.getPayloadTypesList();
             for (let payloadType of Object.values(PAYLOAD_TYPES)) {
-                let listElement = document.createElement("li");
+                let listElement = document.createElement("div");
                 listReference.appendChild(listElement);
 
                 let button = document.createElement("button");
                 listElement.appendChild(button);
                 button.innerHTML = payloadType;
-                // TODO insert typed payloads function
+
+                button.onclick = function () {
+                    Utils.hide(Ui.getPayloadTypesList());
+
+                    for (let typedPayload of TYPED_PAYLOADS[payloadType.toUpperCase()]) {
+                        let div = document.createElement("div");
+                        let el = document.createElement("a");
+                        el.innerHTML = typedPayload;
+                        el.className = "payload";
+                        el.onclick = function () {
+                            lastInputPressed.value = this.innerHTML;
+                        };
+
+                        div.appendChild(el);
+                        Ui.getTypedPayloadsList().appendChild(div);
+                    }
+                };
             }
         };
 
@@ -77,21 +93,8 @@ const Ui = {
     getTypedPayloadsList: function () {
         return this.getMenu().contentWindow.document.getElementById(IDS.ID_TYPED_PAYLOADS);
     },
-    openTypedPayloadsList: function (payloadType) {
-        switch (payloadType) {
-            case TYPED_PAYLOADS.RAW_PAYOLADS:
-                break;
-            case TYPED_PAYLOADS.ENCODED_PAYLOADS:
-                break;
-            default:
-                console.log(payloadType + " case not handled");
-        }
-    },
 };
 
-function hi() {
-    console.log("hi");
-}
 var lastInputPressed;
 
 function main() {
@@ -113,9 +116,6 @@ function main() {
 
                 // else create menu
                 menu = Ui.createMenu();
-
-                // TODO Select function
-                /**/
 
                 // show menu
                 if (Utils.isNotNull(menu) && !Utils.isVisible(menu)) Utils.show(menu);
