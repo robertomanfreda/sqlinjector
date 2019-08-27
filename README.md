@@ -19,3 +19,7 @@ Feel free to clone the project and modify it as you want.
 ## Contributions
 Any contribution is welcome, clone the project and make your modifications, then make a pull request!  
 Every modification should start from the Master branch.
+
+
+## Screenshots
+![Alt text](screenshots/sqlinjector_screenshot_0.png?raw=true "sqlinjector")
