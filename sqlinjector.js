@@ -1,4 +1,3 @@
-//Create array of payloads to be added, these should be SQL payloads
 const IDS = {
     ID_MENU: "menu_frame",
     ID_PAYLOAD_TYPES: "payload_types",
@@ -11,12 +10,13 @@ const PAYLOAD_TYPES = {
     "ENCODED": "Encoded",
 };
 
+//Create array of payloads to be added, these should be SQL payloads
 const TYPED_PAYLOADS = {
     "RAW": ["1 OR 1=1", "1\\' OR \\'1\\'=\\'1", "1\\'1", "1 EXEC XP_", "1 AND 1=1", "1\\' AND 1=(SELECT COUNT(*) FROM tablenames); --", "1 AND USER_NAME() = \\'dbo\\'", "\\\\\\'; DESC users; --"],
     "ENCODED": ["sdsddsd", "vgvhvhj", "vvjhwdbjhd"],
 };
 
-// TODO Understand how to use modules and import these vars in it
+// TODO Understand how to use modules and import these consts in it
 const Utils = {
     hide: function (HTMLElement) {
         HTMLElement.style.display = "none";
@@ -51,6 +51,7 @@ const Ui = {
             };
 
 
+            // TODO rename div el ecc
             let listReference = Ui.getPayloadTypesList();
             for (let payloadType of Object.values(PAYLOAD_TYPES)) {
                 let listElement = document.createElement("div");
@@ -59,6 +60,7 @@ const Ui = {
                 let button = document.createElement("button");
                 listElement.appendChild(button);
                 button.innerHTML = payloadType;
+                button.id = "payload_button";
 
                 button.onclick = function () {
                     Utils.hide(Ui.getPayloadTypesList());
@@ -66,10 +68,15 @@ const Ui = {
                     for (let typedPayload of TYPED_PAYLOADS[payloadType.toUpperCase()]) {
                         let div = document.createElement("div");
                         let el = document.createElement("a");
-                        el.innerHTML = typedPayload;
                         el.className = "payload";
+
+                        let payloadText = document.createElement("u");
+                        payloadText.innerHTML = typedPayload;
+                        payloadText.id = "hovered_payload";
+                        el.appendChild(payloadText);
+
                         el.onclick = function () {
-                            lastInputPressed.value = this.innerHTML;
+                            lastInputPressed.value = this.children[0].innerHTML;
                         };
 
                         div.appendChild(el);

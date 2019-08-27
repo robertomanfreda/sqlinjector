@@ -16,6 +16,7 @@ li {
     position: absolute;
     top: 2px;
     right: 2px;
+    cursor: pointer;
 }
 
 #titled_closeable_table {
@@ -26,5 +27,13 @@ li {
 
 .payload {
     color: rgba(255, 255, 255, 1.0);
+}
+
+#payload_button {
+    cursor: pointer;
+}
+
+#hovered_payload {
+    cursor: pointer;
 }
 
