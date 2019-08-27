@@ -11,10 +11,18 @@ const PAYLOAD_TYPES = {
 };
 
 //Create array of payloads to be added, these should be SQL payloads
-const TYPED_PAYLOADS = {
-    "RAW": ["1 OR 1=1", "1\\' OR \\'1\\'=\\'1", "1\\'1", "1 EXEC XP_", "1 AND 1=1", "1\\' AND 1=(SELECT COUNT(*) FROM tablenames); --", "1 AND USER_NAME() = \\'dbo\\'", "\\\\\\'; DESC users; --"],
+var TYPED_PAYLOADS = {
+    "RAW": [],
     "ENCODED": ["sdsddsd", "vgvhvhj", "vvjhwdbjhd"],
 };
+
+// MySQL RAW Payloads
+fetch(browser.extension.getURL("payloads/mysql.json"))
+    .then(response => response.text())
+    .then(text => {
+        let payloads = JSON.parse(text);
+        for (let i = 0; i < payloads.payloads.length; i++) TYPED_PAYLOADS.RAW.push(payloads.payloads[i].toString());
+    });
 
 // TODO Understand how to use modules and import these consts in it
 const Utils = {
@@ -66,21 +74,21 @@ const Ui = {
                     Utils.hide(Ui.getPayloadTypesList());
 
                     for (let typedPayload of TYPED_PAYLOADS[payloadType.toUpperCase()]) {
-                        let div = document.createElement("div");
-                        let el = document.createElement("a");
-                        el.className = "payload";
+                        let divPayload = document.createElement("div");
+                        let aPayload = document.createElement("a");
+                        aPayload.className = "payload";
 
                         let payloadText = document.createElement("u");
                         payloadText.innerHTML = typedPayload;
                         payloadText.id = "hovered_payload";
-                        el.appendChild(payloadText);
+                        aPayload.appendChild(payloadText);
 
-                        el.onclick = function () {
+                        aPayload.onclick = function () {
                             lastInputPressed.value = this.children[0].innerHTML;
                         };
 
-                        div.appendChild(el);
-                        Ui.getTypedPayloadsList().appendChild(div);
+                        divPayload.appendChild(aPayload);
+                        Ui.getTypedPayloadsList().appendChild(divPayload);
                     }
                 };
             }
