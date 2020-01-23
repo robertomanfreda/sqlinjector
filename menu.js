@@ -1,7 +1,4 @@
 var Menu = {
-    log: function () {
-        console.log("hi");
-    },
     createMenu: function () {
         Logger.d("Creating menu");
         let menu = document.createElement('div');
