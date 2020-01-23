@@ -1,3 +1,4 @@
+/*
 const IDS = {
     ID_MENU: "menu_frame",
     ID_PAYLOAD_TYPES: "payload_types",
@@ -139,7 +140,46 @@ function main() {
     }
 }
 
-//+------------+
-//|***-MAIN-***|
-//+------------+
+
+ */
+
+
+console.log("SQLInjector Successfully Loaded ");
+
+var menu = null;
+var lastInputPressed = null;
+
+function main() {
+    let inputs = document.getElementsByTagName('INPUT');
+
+    for (let input of inputs) {
+        input.setAttribute('data-long-press-delay', '250');
+        input.addEventListener('long-press', function (e) {
+            Logger.d("Input clicked");
+            lastInputPressed = this;
+
+            // Add the menu in the page for the first time
+            if (null === menu) {
+                menu = Menu.createMenu();
+                Wizard.addHTMLElement(menu);
+            }
+
+            // On every long press in an input field show the menu
+            if (Wizard.isHTMLElementHidden(menu)) {
+                Wizard.showHTMLElement(menu);
+            }
+        });
+
+        // On every click (outside the menu area) hide the menu if is visible
+        window.addEventListener('mousedown', function (e) {
+            //e.preventDefault();
+            if (Wizard.isHTMLElementVisible(menu) && !menu.contains(e.target)) {
+                Wizard.hideHTMLElement(menu);
+            }
+        });
+
+    }
+
+}
+
 main();

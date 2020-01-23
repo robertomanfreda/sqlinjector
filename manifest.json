@@ -1,23 +1,27 @@
 {
-
   "manifest_version": 2,
   "name": "sqlinjector",
   "version": "1.0",
-  "author": "ro8or",
+  "author": "robertomanfreda",
   "developer": {
-    "name": "ro8or"
+    "name": "robertomanfreda"
   },
-
-  "description": "Inject SQL payloads in text inputs.",
-
+  "description": "SQLInjection",
   "icons": {
     "48": "icons/border-48.png"
   },
-
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["sqlinjector.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "sqlinjector.js",
+        "menu.js",
+        "wizard.js",
+        "logger.js",
+        "long-press-event.min.js"
+      ]
     }
   ],
 
